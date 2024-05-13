@@ -4,11 +4,11 @@ public class Greeting {
 
     String author;
 
-    String greeting;
+    String text;
 
-    public Greeting(String author, String greeting) {
+    public Greeting(String author, String text) {
         this.author = author;
-        this.greeting = greeting;
+        this.text = text;
     }
 
     public Greeting() {
@@ -18,7 +18,7 @@ public class Greeting {
         return author;
     }
 
-    public String getGreeting() {
-        return greeting;
+    public String getText() {
+        return text;
     }
 }
