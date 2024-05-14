@@ -19,6 +19,19 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      - name: Get version from pom.xml
+        id: get_version
+        run: echo "::set-output name=version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+
+      - name: Print version
+        run: echo $POM_VERSION
+
+      - name: Expose version as an output
+        run: echo "POM_VERSION=${{ steps.get_version.outputs.version }}" >> $GITHUB_ENV
+
+      - name: Print version
+        run: echo $POM_VERSION
+
       - name: Build with Maven
         run: mvn clean package --file pom.xml
 
@@ -31,5 +44,5 @@ jobs:
       - name: Push Docker image
         run: |
           echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-          docker tag hello-podman ${{ secrets.DOCKERHUB_USERNAME }}/hello-podman:latest
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-podman:latest
+          docker tag hello-podman ${{ secrets.DOCKERHUB_USERNAME }}/hello-podman:${POM_VERSION}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-podman:${POM_VERSION}
